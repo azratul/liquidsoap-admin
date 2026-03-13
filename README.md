@@ -96,14 +96,14 @@ services:
   admin:
     image: ghcr.io/azratul/liquidsoap-admin:latest
     ports:
-      - "8080:8080"
+      - "8010:8010"
     volumes:
       - /your/music:/music:ro # The same music directory mounted in liquidsoap
     environment:
       LIQUIDSOAP_ADDR: "liquidsoap:1234"
       MUSIC_ROOT:      "/music"
       QUEUE_NAME:      "manual"
-      HTTP_PORT:       "8080"
+      HTTP_PORT:       "8010"
       # LASTFM_APIKEY: "..."
       # AUTH_USER:     "operator"
       # AUTH_PASS:     "changeme"
