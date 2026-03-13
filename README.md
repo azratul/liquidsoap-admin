@@ -1,4 +1,4 @@
-# radio-web
+# liquidsoap-admin
 
 Web admin interface for a [Liquidsoap](https://www.liquidsoap.info/) radio station. Browse your music library, manage the manual queue, and monitor what's on air — all from the browser.
 
@@ -14,7 +14,7 @@ Web admin interface for a [Liquidsoap](https://www.liquidsoap.info/) radio stati
 
 Compatible with **Liquidsoap 2.x**.
 
-radio-web connects to Liquidsoap's telnet API and expects two custom commands to be registered in your script, plus a `request.queue` with a known ID:
+liquidsoap-admin connects to Liquidsoap's telnet API and expects two custom commands to be registered in your script, plus a `request.queue` with a known ID:
 
 ```liquidsoap
 # Enable telnet API
@@ -63,7 +63,7 @@ The `uptime`, `manual.push`, `manual.queue`, `manual.flush`, and `skip` commands
 
 ## Deployment
 
-radio-web is designed to run as a **sidecar container** alongside Liquidsoap. This way Liquidsoap's telnet port (1234) stays on the internal Docker network and is never exposed to the host.
+liquidsoap-admin is designed to run as a **sidecar container** alongside Liquidsoap. This way Liquidsoap's telnet port (1234) stays on the internal Docker network and is never exposed to the host.
 
 It can still be used without a sidecar container, but in that case, if Liquidsoap is running in Docker, its telnet port would need to be exposed to the host.
 
@@ -93,7 +93,7 @@ services:
     networks:
       - radio
 
-  radio-web:
+  admin:
     image: ghcr.io/azratul/liquidsoap-admin:latest
     ports:
       - "8080:8080"
