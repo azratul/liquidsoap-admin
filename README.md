@@ -27,18 +27,26 @@ manual = request.queue(id="manual", conservative=true)
 
 # ...your sources, fallbacks, outputs, etc...
 
+radio = fallback(track_sensitive=false, [live, manual, radio, base])
+radio = mksafe(id="radio", radio)
+
 # Required: exposes current track info to radio-web
-current_meta = ref([]:[(string * string)])
-radio.on_metadata(fun(m) -> current_meta := m)
+def radio_on_air(_) =
+  m = null.get(default=[], radio.last_metadata())
+
+  artist = list.assoc(default="", "artist", m)
+  title  = list.assoc(default="", "title", m)
+  fname  = list.assoc(default="", "filename", m)
+  ctype  = list.assoc(default="", "sc_content_type", m)
+
+  "#{artist}|#{title}|#{fname}|#{ctype}"
+end
 
 radio.register_command(
-  name="on_air",
-  description="Current track: artist|title|filename|sc_content_type",
   usage="on_air",
-  fun(_) -> begin
-    m = !current_meta
-    "#{m["artist"]}|#{m["title"]}|#{m["filename"]}|#{m["sc_content_type"]}"
-  end
+  description="Current track: artist|title|filename|sc_content_type",
+  "on_air",
+  radio_on_air
 )
 
 # Required: allows radio-web to remove individual requests from the queue
