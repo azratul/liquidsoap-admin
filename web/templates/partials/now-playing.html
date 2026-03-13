@@ -1,0 +1,49 @@
+{{define "now-playing.html"}}
+<div id="now-playing"
+     hx-get="/partials/now-playing"
+     hx-trigger="every 8s"
+     hx-swap="outerHTML">
+  <div class="now-playing">
+    <div class="now-playing-art-container">
+      {{if .TrackInfo.Image}}
+        <img class="now-playing-art" src="{{.TrackInfo.Image}}" alt="album art">
+      {{else}}
+        <div class="now-playing-art skeleton" style="display: flex; align-items: center; justify-content: center; background: var(--surface-hover); color: var(--text-muted); font-size: 3rem;">
+          ♫
+        </div>
+      {{end}}
+    </div>
+    
+    <div class="now-playing-meta">
+      {{if .NowPlaying.IsEmpty}}
+        <div class="now-playing-title">—</div>
+        <div class="now-playing-artist">No data</div>
+      {{else}}
+        <div class="now-playing-title">{{.NowPlaying.Title}}</div>
+        <div class="now-playing-artist">{{.NowPlaying.Artist}}</div>
+        {{if .TrackInfo.Album}}
+          <div class="now-playing-album">{{.TrackInfo.Album}}</div>
+        {{end}}
+        
+        <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;">
+          <span class="btn btn-outline" style="font-size: 0.65rem; padding: 2px 8px; pointer-events: none; text-transform: uppercase; letter-spacing: 0.05em;">
+            {{.NowPlaying.ContentType}}
+          </span>
+          <button class="btn btn-primary"
+                  style="font-size: 0.75rem; padding: 4px 12px;"
+                  hx-post="/skip"
+                  hx-confirm="Skip the current track?">
+            ⏭ Skip Track
+          </button>
+        </div>
+      {{end}}
+    </div>
+  </div>
+  
+  {{if .NowPlaying.Path}}
+    <div class="now-playing-path">
+      Source: {{.NowPlaying.Path}}
+    </div>
+  {{end}}
+</div>
+{{end}}

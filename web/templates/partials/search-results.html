@@ -1,0 +1,25 @@
+{{define "search-results.html"}}
+<div id="library-content">
+  <div class="entry-list">
+    {{if not .Results}}
+      <div style="padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+        No results for "{{.Query}}".
+      </div>
+    {{else}}
+      {{range .Results}}
+      <div class="entry-item">
+        <div class="entry-icon">♪</div>
+        <div class="entry-info">
+          <div class="entry-name">{{.Name}}</div>
+        </div>
+        <button class="btn btn-primary"
+                style="padding: 4px 10px; font-size: 0.75rem;"
+                hx-post="/queue/add"
+                hx-vals='{"path": "{{.Path}}"}'
+                {{if $.QueueTarget}}hx-target="{{$.QueueTarget}}" hx-swap="outerHTML"{{else}}hx-swap="none"{{end}}>+ Queue</button>
+      </div>
+      {{end}}
+    {{end}}
+  </div>
+</div>
+{{end}}

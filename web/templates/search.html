@@ -1,0 +1,27 @@
+{{template "base" .}}
+
+{{define "content"}}
+<main class="main-layout" style="grid-template-columns: 1fr;">
+  <section class="panel">
+    <div class="panel-header">
+      <h2 class="panel-title">Search Results: {{.Query}}</h2>
+      <a href="/library" class="btn btn-outline" style="font-size: 0.75rem;">← Back to Library</a>
+    </div>
+    <div class="panel-content">
+      <div class="search-container">
+        <input type="text"
+               name="q"
+               class="input-modern"
+               value="{{.Query}}"
+               placeholder="Search artists, tracks..."
+               hx-get="/search"
+               hx-trigger="keyup changed delay:400ms"
+               hx-target="#library-content"
+               hx-swap="innerHTML"
+               hx-include="[name='q']">
+      </div>
+      {{template "search-results.html" .}}
+    </div>
+  </section>
+</main>
+{{end}}

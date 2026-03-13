@@ -1,0 +1,51 @@
+{{template "base" .}}
+
+{{define "content"}}
+<main class="main-layout">
+  <!-- On Air Panel -->
+  <section class="panel">
+    <div class="panel-header">
+      <h2 class="panel-title">On Air</h2>
+    </div>
+    <div class="panel-content">
+      {{template "now-playing.html" .}}
+    </div>
+
+    <div class="panel-header" style="border-top: 1px solid var(--border)">
+      <h2 class="panel-title">Manual Queue</h2>
+      <button class="btn btn-danger-outline"
+              style="padding: 4px 10px; font-size: 0.75rem;"
+              hx-post="/queue/flush"
+              hx-target="#queue-list"
+              hx-swap="outerHTML"
+              hx-confirm="Flush the entire queue?">Flush Queue</button>
+    </div>
+    <div class="panel-content" style="padding-top: 0">
+      {{template "queue-list.html" .Queue}}
+    </div>
+  </section>
+
+  <!-- Library Panel -->
+  <section class="panel">
+    <div class="panel-header">
+      <h2 class="panel-title">Library</h2>
+    </div>
+    <div class="panel-content">
+      <div class="search-container">
+        <input type="text"
+               name="q"
+               class="input-modern"
+               placeholder="Search artists, tracks..."
+               hx-get="/search"
+               hx-trigger="keyup changed delay:400ms"
+               hx-target="#library-content"
+               hx-swap="innerHTML"
+               hx-include="[name='q']">
+      </div>
+      <div id="library-content">
+        {{template "library-content.html" .}}
+      </div>
+    </div>
+  </section>
+</main>
+{{end}}

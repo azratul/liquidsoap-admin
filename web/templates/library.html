@@ -1,0 +1,25 @@
+{{template "base" .}}
+
+{{define "content"}}
+<main class="main-layout" style="grid-template-columns: 1fr;">
+  <section class="panel">
+    <div class="panel-header">
+      <h2 class="panel-title">Library Browser</h2>
+    </div>
+    <div class="panel-content">
+      <div class="search-container">
+        <input type="text"
+               name="q"
+               class="input-modern"
+               placeholder="Search artists, tracks..."
+               hx-get="/search"
+               hx-trigger="keyup changed delay:400ms"
+               hx-target="#library-content"
+               hx-swap="innerHTML"
+               hx-include="[name='q']">
+      </div>
+      {{template "library-content.html" .}}
+    </div>
+  </section>
+</main>
+{{end}}

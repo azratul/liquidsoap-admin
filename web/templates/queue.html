@@ -1,0 +1,20 @@
+{{template "base" .}}
+
+{{define "content"}}
+<main class="main-layout" style="grid-template-columns: 1fr;">
+  <section class="panel">
+    <div class="panel-header">
+      <h2 class="panel-title">Manual Queue</h2>
+      <button class="btn btn-danger-outline"
+              style="padding: 4px 10px; font-size: 0.75rem;"
+              hx-post="/queue/flush"
+              hx-target="#queue-list"
+              hx-swap="outerHTML"
+              hx-confirm="Flush the entire queue?">Flush Queue</button>
+    </div>
+    <div class="panel-content">
+      {{template "queue-list.html" .Queue}}
+    </div>
+  </section>
+</main>
+{{end}}

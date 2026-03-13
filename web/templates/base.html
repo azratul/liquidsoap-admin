@@ -1,0 +1,43 @@
+{{define "base"}}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Radio Control</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/htmx.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="topbar-brand" href="/">
+      <span>♫</span> Radio
+    </a>
+    <nav>
+      <a href="/">Dashboard</a>
+      <a href="/library">Library</a>
+      <a href="/queue">Queue</a>
+    </nav>
+    <div class="status-area"
+         hx-get="/partials/badge"
+         hx-trigger="every 8s"
+         hx-swap="innerHTML">
+      {{template "badge" .}}
+    </div>
+  </header>
+
+  {{block "content" .}}{{end}}
+</body>
+</html>
+{{end}}
+
+{{define "badge"}}
+  {{if .Uptime}}<span class="topbar-uptime">{{.Uptime}}</span>{{end}}
+  {{if .NowPlaying.IsLive}}
+    <span class="badge-live">● LIVE</span>
+  {{else}}
+    <span class="btn btn-outline" style="font-size: 0.7rem; padding: 2px 8px; pointer-events: none;">AUTO</span>
+  {{end}}
+{{end}}

@@ -1,0 +1,30 @@
+{{define "queue-list.html"}}
+<div id="queue-list"
+     hx-get="/partials/queue"
+     hx-trigger="every 5s"
+     hx-swap="outerHTML"
+     class="entry-list">
+  {{if not .}}
+    <div style="padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+      Queue is empty.
+    </div>
+  {{else}}
+    {{range $i, $e := .}}
+    <div class="entry-item">
+      <div class="entry-icon" style="font-family: var(--font-mono); font-size: 0.75rem;">
+        {{add $i 1}}
+      </div>
+      <div class="entry-info">
+        <div class="entry-name">{{if $e.Title}}{{$e.Title}}{{else}}{{$e.Path}}{{end}}</div>
+        {{if $e.Artist}}<div class="entry-sub">{{$e.Artist}}</div>{{end}}
+      </div>
+      <button class="btn btn-danger-outline"
+              style="padding: 4px 8px; font-size: 0.75rem;"
+              hx-delete="/queue/{{$e.RID}}"
+              hx-target="closest .entry-item"
+              hx-swap="delete">✕</button>
+    </div>
+    {{end}}
+  {{end}}
+</div>
+{{end}}

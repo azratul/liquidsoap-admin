@@ -1,0 +1,12 @@
+root = "."
+tmp_dir = "/tmp/air"
+
+[build]
+  cmd = "go build -o /tmp/air/radio-web ./cmd/server"
+  bin = "/tmp/air/radio-web"
+  include_ext = ["go", "html", "css"]
+  exclude_dir  = ["vendor"]
+  delay = 500
+
+[screen]
+  clear_on_rebuild = true
