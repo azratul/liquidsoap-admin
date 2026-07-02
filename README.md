@@ -8,6 +8,7 @@ Web admin interface for a [Liquidsoap](https://www.liquidsoap.info/) radio stati
 - **Library browser** — navigate your music directory and queue tracks instantly
 - **Queue management** — view, flush, or skip the manual queue
 - **Search** — case-insensitive substring search across the entire library
+- **Playback history** — stores six months of recently played tracks in SQLite
 - **Responsive** — works on mobile
 
 ## Liquidsoap setup
@@ -134,6 +135,8 @@ networks:
 | `QUEUE_NAME` | `manual` | Liquidsoap queue ID — must match the `id` of your `request.queue` |
 | `HTTP_PORT` | `8010` | Web UI port |
 | `LOG_LEVEL` | `info` | Log verbosity: `debug`, `info`, `warn`, `error` |
+| `HISTORY_DB` | `/data/history.db` | SQLite database used for playback history (six-month retention) |
+| `HISTORY_POLL_INTERVAL` | `30s` | How often Liquidsoap is polled for a new track |
 | `LASTFM_APIKEY` | — | Last.fm API key. When set, album art is fetched and cached per track (optional) |
 | `LASTFM_URL` | `https://ws.audioscrobbler.com/2.0` | Last.fm API base URL. Override only if proxying the API (optional) |
 | `AUTH_USER` / `AUTH_PASS` | — | When both are set, the entire UI is protected with HTTP Basic Auth (optional) |
