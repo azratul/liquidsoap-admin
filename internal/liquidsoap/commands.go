@@ -156,20 +156,15 @@ func (c *Client) OnAir() (NowPlaying, error) {
 		return NowPlaying{}, fmt.Errorf("on_air: %s", resp)
 	}
 
-	parts := strings.SplitN(resp, "|", 4)
+	parts := strings.Split(resp, "|")
+	if len(parts) != 4 {
+		return NowPlaying{}, fmt.Errorf("on_air: malformed response %q", resp)
+	}
 
-	var np NowPlaying
-	if len(parts) > 0 {
-		np.Artist = parts[0]
-	}
-	if len(parts) > 1 {
-		np.Title = parts[1]
-	}
-	if len(parts) > 2 {
-		np.Path = parts[2]
-	}
-	if len(parts) > 3 {
-		np.ContentType = parts[3]
-	}
-	return np, nil
+	return NowPlaying{
+		Artist:      parts[0],
+		Title:       parts[1],
+		Path:        parts[2],
+		ContentType: parts[3],
+	}, nil
 }

@@ -64,7 +64,7 @@ func (c *Client) sendCommand(cmd string) (string, error) {
 	for scanner.Scan() {
 		line := scanner.Text()
 		if line == "END" {
-			break
+			return buf.String(), nil
 		}
 		if buf.Len() > 0 {
 			buf.WriteByte('\n')
@@ -75,7 +75,9 @@ func (c *Client) sendCommand(cmd string) (string, error) {
 		return "", fmt.Errorf("read %q: %w", cmd, err)
 	}
 
-	return buf.String(), nil
+	// EOF without the "END" terminator: the server closed the connection
+	// (e.g. "Connection timed out.. Bye!") and the data read is not a response.
+	return "", fmt.Errorf("read %q: connection closed before END (got %q)", cmd, buf.String())
 }
 
 func (c *Client) ensureConnected() error {

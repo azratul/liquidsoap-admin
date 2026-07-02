@@ -128,8 +128,9 @@ func (s *Store) poll() {
 		slog.Debug("history poll: on_air", "err", err)
 		return
 	}
-	// No registrar jingles ni estados vacíos.
-	if np.IsEmpty() || np.ContentType == "jingle" {
+	// No registrar jingles ni metadatos incompletos: una respuesta inválida
+	// del cliente Liquidsoap nunca debe llegar a la base.
+	if np.Artist == "" || np.Title == "" || np.ContentType == "jingle" {
 		return
 	}
 
