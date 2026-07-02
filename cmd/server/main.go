@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"html/template"
 	"log/slog"
 	"net/http"
@@ -13,6 +14,7 @@ import (
 
 	"radio-web/internal/config"
 	"radio-web/internal/handler"
+	"radio-web/internal/history"
 	"radio-web/internal/library"
 	"radio-web/internal/liquidsoap"
 	mw "radio-web/internal/middleware"
@@ -67,9 +69,21 @@ func main() {
 	lastfm := library.NewLastFMClient(cfg.LastFMKey, cfg.LastFMURL)
 	browser := library.NewBrowser(cfg.MusicRoot)
 
+	histStore, err := history.New(cfg.HistoryDB, lsClient, lastfm, cfg.HistoryPollInterval)
+	if err != nil {
+		slog.Error("history store", "err", err)
+		os.Exit(1)
+	}
+	defer histStore.Close()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	go histStore.Run(ctx)
+
 	statusH := handler.NewStatusHandler(lsClient, lastfm, browser, cfg.QueueName, mustPage("web/templates/index.html"))
 	queueH := handler.NewQueueHandler(lsClient, cfg.MusicRoot, cfg.QueueName, mustPage("web/templates/queue.html"))
 	libH := handler.NewLibraryHandler(lsClient, browser, mustPage("web/templates/library.html"), mustPage("web/templates/search.html"))
+	histH := handler.NewHistoryHandler(histStore)
 
 	r := chi.NewRouter()
 	r.Use(chimw.Logger)
@@ -103,6 +117,7 @@ func main() {
 
 	// API JSON
 	r.Get("/api/status", statusH.StatusJSON)
+	r.Get("/api/history", histH.Recent)
 
 	slog.Info("radio-admin started", "addr", cfg.HTTPAddr(), "music_root", cfg.MusicRoot)
 	if err := http.ListenAndServe(cfg.HTTPAddr(), r); err != nil {
